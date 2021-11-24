@@ -1,22 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [showMe, setShowMe] = useState(true);
+
+  useEffect(() => {
+    const onMessage = (event) => {
+      setShowMe(event.data.iframeVisible);
+      // console.log(event.data);
+      console.info("message", event);
+    };
+
+    window.addEventListener("message", onMessage);
+
+    return () => {
+      window.removeEventListener("message", onMessage);
+    };
+  }, []);
+
+  function ShowIframe() {
+    setShowMe(true);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div>
+          <span>Sistema React</span>{" "}
+          <button onClick={ShowIframe}>Aparecer Iframe</button>
+        </div>
+
+        {showMe ? (
+          <div style={{backgroundColor : 'white', marginTop : '25px'}}>
+            <iframe src="http://localhost:4200/" height="500px" width="100%" />
+          </div>
+        ) : null}
       </header>
     </div>
   );
